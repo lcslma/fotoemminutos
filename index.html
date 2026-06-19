@@ -468,12 +468,31 @@
 
       if (!valid) return;
 
-      // ── Aqui você integra com sua ferramenta (Mailchimp, RD Station, ActiveCampaign, etc.) ──
-      console.log({ nome, sobrenome, email, whatsapp });
+      // ── Envio via Formspree ──
+      const btn = document.querySelector('.btn');
+      btn.textContent = 'Enviando...';
+      btn.disabled = true;
 
-      // Exibe mensagem de sucesso
-      document.getElementById('leadForm').style.display = 'none';
-      document.getElementById('successMsg').style.display = 'block';
+      fetch('https://formspree.io/f/mqeorbno', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ nome, sobrenome, email, whatsapp })
+      })
+      .then(res => {
+        if (res.ok) {
+          document.getElementById('leadForm').style.display = 'none';
+          document.getElementById('successMsg').style.display = 'block';
+        } else {
+          btn.textContent = 'Quero meu acesso gratuito';
+          btn.disabled = false;
+          alert('Ocorreu um erro. Por favor, tente novamente.');
+        }
+      })
+      .catch(() => {
+        btn.textContent = 'Quero meu acesso gratuito';
+        btn.disabled = false;
+        alert('Sem conexão. Verifique sua internet e tente novamente.');
+      });
     });
   </script>
 
