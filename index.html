@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadastre-se</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --black:      #0a0a0a;
+      --card-bg:    #111111;
+      --border:     #222222;
+      --gold:       #c9a84c;
+      --gold-light: #e2c47a;
+      --text:       #e8e8e8;
+      --muted:      #7a7a7a;
+      --input-bg:   #181818;
+      --input-border: #2c2c2c;
+      --input-focus: #c9a84c;
+      --error:      #e05555;
+      --success:    #4caf8a;
+    }
+
+    html, body {
+      min-height: 100%;
+    }
+
+    body {
+      background-color: var(--black);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 50% 0%, rgba(201,168,76,0.06) 0%, transparent 70%);
+      font-family: 'Inter', sans-serif;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 40px 20px;
+    }
+
+    /* ── WRAPPER ── */
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    /* ── HEADING BLOCK ── */
+    .heading {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .heading .eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .heading h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 6vw, 40px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #ffffff;
+      margin-bottom: 14px;
+    }
+
+    .heading p {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Signature element: animated gold top line */
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%; right: -100%;
+      height: 2px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        var(--gold) 40%,
+        var(--gold-light) 50%,
+        var(--gold) 60%,
+        transparent 100%);
+      animation: shimmer 3s ease-in-out infinite;
+    }
+
+    @keyframes shimmer {
+      0%   { transform: translateX(-60%); opacity: 0; }
+      20%  { opacity: 1; }
+      80%  { opacity: 1; }
+      100% { transform: translateX(60%); opacity: 0; }
+    }
+
+    /* ── FORM ── */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+
+    label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    label .required {
+      color: var(--gold);
+      margin-left: 2px;
+    }
+
+    label .optional {
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0;
+      text-transform: none;
+      color: #555;
+      margin-left: 4px;
+    }
+
+    input {
+      background: var(--input-bg);
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 400;
+      padding: 13px 16px;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      width: 100%;
+      -webkit-appearance: none;
+    }
+
+    input::placeholder {
+      color: #3a3a3a;
+    }
+
+    input:focus {
+      border-color: var(--input-focus);
+      box-shadow: 0 0 0 3px rgba(201,168,76,0.12);
+    }
+
+    input.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(224,85,85,0.1);
+    }
+
+    input.valid {
+      border-color: var(--success);
+    }
+
+    .field-error {
+      font-size: 11px;
+      color: var(--error);
+      min-height: 14px;
+      display: none;
+    }
+
+    .field-error.show {
+      display: block;
+    }
+
+    /* ── SUBMIT ── */
+    .btn {
+      margin-top: 4px;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      border: none;
+      border-radius: 8px;
+      color: #0a0a0a;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 15px 24px;
+      transition: opacity 0.2s, transform 0.15s;
+      width: 100%;
+    }
+
+    .btn:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    /* ── SUCCESS STATE ── */
+    .success-msg {
+      display: none;
+      text-align: center;
+      padding: 20px 0 10px;
+    }
+
+    .success-msg .check {
+      font-size: 40px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .success-msg h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .success-msg p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── FOOTER NOTE ── */
+    .footer-note {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 11px;
+      color: #444;
+      line-height: 1.7;
+    }
+
+    .footer-note a {
+      color: #555;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 480px) {
+      .card { padding: 32px 24px; }
+      .row { grid-template-columns: 1fr; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .card::before { animation: none; opacity: 0.5; left: 0; right: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <div class="heading">
+      <span class="eyebrow">Acesso exclusivo</span>
+      <h1>Faça parte da nossa comunidade</h1>
+      <p>Preencha os dados abaixo e receba conteúdos exclusivos diretamente no seu e-mail.</p>
+    </div>
+
+    <div class="card">
+
+      <!-- Formulário -->
+      <form class="form" id="leadForm" novalidate>
+
+        <div class="row">
+          <div class="field">
+            <label for="nome">Nome <span class="required">*</span></label>
+            <input
+              type="text"
+              id="nome"
+              name="nome"
+              placeholder="João"
+              autocomplete="given-name"
+              required
+            />
+            <span class="field-error" id="nome-error">Informe seu nome.</span>
+          </div>
+
+          <div class="field">
+            <label for="sobrenome">Sobrenome <span class="required">*</span></label>
+            <input
+              type="text"
+              id="sobrenome"
+              name="sobrenome"
+              placeholder="Silva"
+              autocomplete="family-name"
+              required
+            />
+            <span class="field-error" id="sobrenome-error">Informe seu sobrenome.</span>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="whatsapp">WhatsApp <span class="optional">(opcional)</span></label>
+          <input
+            type="tel"
+            id="whatsapp"
+            name="whatsapp"
+            placeholder="+55 (11) 99999-9999"
+            autocomplete="tel"
+            maxlength="19"
+            inputmode="numeric"
+          />
+          <span class="field-error" id="whatsapp-error">Formato inválido. Ex: +55 (11) 99999-9999</span>
+        </div>
+
+        <div class="field">
+          <label for="email">E-mail <span class="required">*</span></label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="joao@exemplo.com"
+            autocomplete="email"
+            required
+          />
+          <span class="field-error" id="email-error">Informe um e-mail válido.</span>
+        </div>
+
+        <button type="submit" class="btn">Quero meu acesso gratuito</button>
+
+      </form>
+
+      <!-- Mensagem de sucesso -->
+      <div class="success-msg" id="successMsg">
+        <span class="check">✦</span>
+        <h2>Cadastro realizado!</h2>
+        <p>Obrigado. Em breve você receberá nossas novidades no e-mail informado.</p>
+      </div>
+
+    </div>
+
+    <p class="footer-note">
+      Ao se cadastrar, você concorda com nossa
+      <a href="#">Política de Privacidade</a>.
+      Sem spam, prometemos.
+    </p>
+
+  </div>
+
+  <script>
+    // ── Máscara WhatsApp: +55 (DD) 9DDDD-DDDD ──
+    const whatsappInput = document.getElementById('whatsapp');
+
+    whatsappInput.addEventListener('input', function () {
+      let val = this.value.replace(/\D/g, '');
+
+      // Limita a 13 dígitos: 55 + 2 DDD + 9 número
+      if (val.length > 13) val = val.slice(0, 13);
+
+      let formatted = '';
+      if (val.length === 0) {
+        formatted = '';
+      } else if (val.length <= 2) {
+        formatted = '+' + val;
+      } else if (val.length <= 4) {
+        formatted = '+' + val.slice(0, 2) + ' (' + val.slice(2);
+      } else if (val.length <= 13) {
+        const ddi  = val.slice(0, 2);   // 55
+        const ddd  = val.slice(2, 4);   // DDD
+        const part1 = val.slice(4, 9);  // 9 dígitos (primeiros 5)
+        const part2 = val.slice(9);     // últimos 4
+        formatted = '+' + ddi + ' (' + ddd + ') ' + part1 + (part2 ? '-' + part2 : '');
+      }
+
+      this.value = formatted;
+    });
+
+    // Garante que começa com +55 quando o usuário foca no campo vazio
+    whatsappInput.addEventListener('focus', function () {
+      if (this.value === '') this.value = '+55 ';
+    });
+
+    whatsappInput.addEventListener('blur', function () {
+      if (this.value === '+55 ') this.value = '';
+    });
+
+    // ── Validação ──
+    function showError(id, show) {
+      const err = document.getElementById(id + '-error');
+      const inp = document.getElementById(id);
+      if (show) {
+        err.classList.add('show');
+        inp.classList.add('error');
+        inp.classList.remove('valid');
+      } else {
+        err.classList.remove('show');
+        inp.classList.remove('error');
+        if (inp.value.trim()) inp.classList.add('valid');
+      }
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validateWhatsApp(val) {
+      if (!val) return true; // opcional
+      const digits = val.replace(/\D/g, '');
+      // +55 (DD) 9DDDD-DDDD → 13 dígitos, começa com 55
+      return digits.length === 13 && digits.startsWith('55');
+    }
+
+    // Validação em tempo real ao sair do campo
+    ['nome', 'sobrenome', 'email', 'whatsapp'].forEach(id => {
+      document.getElementById(id).addEventListener('blur', () => validate(id));
+      document.getElementById(id).addEventListener('input', () => {
+        const inp = document.getElementById(id);
+        if (inp.classList.contains('error')) validate(id);
+      });
+    });
+
+    function validate(id) {
+      const val = document.getElementById(id).value.trim();
+      if (id === 'nome')      showError(id, val === '');
+      if (id === 'sobrenome') showError(id, val === '');
+      if (id === 'email')     showError(id, !validateEmail(val));
+      if (id === 'whatsapp')  showError(id, !validateWhatsApp(val));
+    }
+
+    // ── Submit ──
+    document.getElementById('leadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome      = document.getElementById('nome').value.trim();
+      const sobrenome = document.getElementById('sobrenome').value.trim();
+      const email     = document.getElementById('email').value.trim();
+      const whatsapp  = document.getElementById('whatsapp').value.trim();
+
+      let valid = true;
+
+      if (!nome)               { showError('nome', true);      valid = false; }
+      if (!sobrenome)          { showError('sobrenome', true); valid = false; }
+      if (!validateEmail(email)) { showError('email', true);   valid = false; }
+      if (!validateWhatsApp(whatsapp)) { showError('whatsapp', true); valid = false; }
+
+      if (!valid) return;
+
+      // ── Aqui você integra com sua ferramenta (Mailchimp, RD Station, ActiveCampaign, etc.) ──
+      console.log({ nome, sobrenome, email, whatsapp });
+
+      // Exibe mensagem de sucesso
+      document.getElementById('leadForm').style.display = 'none';
+      document.getElementById('successMsg').style.display = 'block';
+    });
+  </script>
+
+</body>
+</html>
