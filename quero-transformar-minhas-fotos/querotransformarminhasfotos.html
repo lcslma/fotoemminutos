@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foto em Minutos — Transforme suas fotos agora</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:      #080808;
+      --dark:       #101010;
+      --card:       #141414;
+      --border:     #1e1e1e;
+      --border-mid: #2a2a2a;
+      --white:      #ffffff;
+      --off-white:  #e8e8e8;
+      --muted:      #6b6b6b;
+      --gold:       #c9a84c;
+      --gold-light: #e2c47a;
+      --gold-dim:   rgba(201,168,76,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--off-white);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── UTIL ── */
+    .container { width: 100%; max-width: 760px; margin: 0 auto; padding: 0 24px; }
+    .gold { color: var(--gold); }
+    .white { color: var(--white); }
+
+    /* ── ANNOUNCEMENT BAR ── */
+    .bar {
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold-light) 50%, var(--gold) 100%);
+      background-size: 200% auto;
+      animation: barShine 4s linear infinite;
+      color: #080808;
+      text-align: center;
+      padding: 10px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+    @keyframes barShine {
+      0%   { background-position: 200% center; }
+      100% { background-position: 0% center; }
+    }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 80px 0 72px;
+      text-align: center;
+      position: relative;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--border-mid), transparent);
+    }
+
+    .hero .eyebrow {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(34px, 7vw, 60px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: var(--white);
+      margin-bottom: 10px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero .subhead {
+      font-size: clamp(17px, 3vw, 21px);
+      font-weight: 300;
+      color: var(--muted);
+      margin: 20px auto 0;
+      max-width: 520px;
+      line-height: 1.55;
+    }
+
+    .hero .subhead strong {
+      color: var(--off-white);
+      font-weight: 500;
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 72px 0; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 5vw, 40px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 540px;
+      line-height: 1.7;
+    }
+
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 0;
+    }
+
+    /* ── CTA BUTTON ── */
+    .btn-cta {
+      display: inline-block;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+      color: #080808;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 18px 40px;
+      border-radius: 6px;
+      transition: opacity .2s, transform .15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-cta:hover { opacity: .88; transform: translateY(-2px); }
+
+    .btn-cta.large { font-size: 16px; padding: 22px 52px; }
+
+    .cta-nudge {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 12px;
+      display: block;
+    }
+
+    /* ── PROMISE ── */
+    .promise {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 56px 0;
+      text-align: center;
+    }
+
+    .promise-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 40px;
+      margin-top: 48px;
+    }
+
+    .promise-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .promise-icon {
+      font-size: 28px;
+      line-height: 1;
+    }
+
+    .promise-item strong {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--white);
+    }
+
+    .promise-item p {
+      font-size: 13px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ── PAIN SECTION ── */
+    .pain { padding: 80px 0; }
+
+    .pain-list {
+      margin-top: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+
+    .pain-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pain-item:first-child { border-top: 1px solid var(--border); }
+
+    .pain-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--border-mid);
+      line-height: 1;
+      min-width: 44px;
+      margin-top: -4px;
+    }
+
+    .pain-text strong {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .pain-text p { font-size: 14px; color: var(--muted); }
+
+    /* ── WHAT YOU GET ── */
+    .modules { background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .modules-grid {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      background: var(--border);
+    }
+
+    .module-card {
+      background: var(--card);
+      padding: 32px 28px;
+    }
+
+    .module-card .tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .module-card h3 {
+      font-size: 17px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .module-card p { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── TRANSFORMATION ── */
+    .transform { padding: 80px 0; }
+
+    .transform-table {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .transform-col { background: var(--card); }
+
+    .transform-header {
+      padding: 16px 24px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .transform-header.before { color: var(--muted); background: #0d0d0d; }
+    .transform-header.after  { color: var(--gold); background: #0d0d0d; }
+
+    .transform-row {
+      display: contents;
+    }
+
+    .transform-cell {
+      padding: 18px 24px;
+      font-size: 14px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .transform-cell .icon { font-size: 15px; line-height: 1.4; flex-shrink: 0; }
+    .transform-cell.before { color: var(--muted); }
+    .transform-cell.after  { color: var(--off-white); }
+
+    /* ── OFFER BOX ── */
+    .offer-section { background: var(--dark); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 80px 0; }
+
+    .offer-box {
+      border: 1px solid var(--border-mid);
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .offer-box::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+    }
+
+    .offer-top {
+      padding: 48px 48px 40px;
+      text-align: center;
+    }
+
+    .offer-badge {
+      display: inline-block;
+      background: var(--gold-dim);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      border-radius: 100px;
+      margin-bottom: 28px;
+    }
+
+    .offer-top h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 42px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .offer-top p {
+      font-size: 16px;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 36px;
+      line-height: 1.65;
+    }
+
+    .checklist {
+      list-style: none;
+      text-align: left;
+      display: inline-flex;
+      flex-direction: column;
+      gap: 14px;
+      margin-bottom: 40px;
+    }
+
+    .checklist li {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 15px;
+      color: var(--off-white);
+    }
+
+    .checklist li::before {
+      content: '✦';
+      color: var(--gold);
+      font-size: 12px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .offer-price-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      margin-bottom: 8px;
+    }
+
+    .price-from {
+      font-size: 16px;
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .price-badge {
+      background: rgba(201,168,76,0.15);
+      color: var(--gold);
+      font-size: 12px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    .offer-cta {
+      padding: 0 48px 48px;
+      text-align: center;
+    }
+
+    .offer-cta .btn-cta { width: 100%; max-width: 420px; }
+
+    .guarantee {
+      margin-top: 20px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .guarantee strong { color: var(--off-white); }
+
+    /* ── FAQ ── */
+    .faq { padding: 80px 0; }
+
+    .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 0; }
+
+    details {
+      border-bottom: 1px solid var(--border);
+    }
+
+    details:first-of-type { border-top: 1px solid var(--border); }
+
+    summary {
+      padding: 22px 0;
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--white);
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      user-select: none;
+    }
+
+    summary::-webkit-details-marker { display: none; }
+
+    summary::after {
+      content: '+';
+      font-size: 22px;
+      font-weight: 300;
+      color: var(--gold);
+      flex-shrink: 0;
+      transition: transform .2s;
+    }
+
+    details[open] summary::after { transform: rotate(45deg); }
+
+    details p {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.75;
+      padding-bottom: 22px;
+    }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      padding: 80px 0;
+      text-align: center;
+    }
+
+    .final-cta h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 5vw, 46px);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .final-cta p {
+      font-size: 16px;
+      color: var(--muted);
+      margin-bottom: 40px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 36px 24px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    footer p { font-size: 12px; color: var(--muted); line-height: 1.8; }
+    footer a { color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── STICKY BAR (mobile) ── */
+    .sticky-cta {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: rgba(8,8,8,0.96);
+      backdrop-filter: blur(12px);
+      border-top: 1px solid var(--border);
+      padding: 16px 20px;
+      z-index: 100;
+      text-align: center;
+    }
+
+    .sticky-cta .btn-cta { width: 100%; max-width: 400px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      section { padding: 56px 0; }
+      .promise-grid { grid-template-columns: 1fr; gap: 32px; }
+      .modules-grid { grid-template-columns: 1fr; }
+      .transform-table { grid-template-columns: 1fr; }
+      .transform-header.before,
+      .transform-cell.before { display: none; }
+      .offer-top, .offer-cta { padding-left: 24px; padding-right: 24px; }
+      .sticky-cta { display: block; }
+      footer { padding-bottom: 96px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .bar { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ANNOUNCEMENT BAR -->
+<div class="bar">🔥 Oferta de lançamento — preço exclusivo por tempo limitado</div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Foto em Minutos</span>
+    <h1>Deixe suas fotos<br><em>ainda mais incríveis</em><br>em minutos</h1>
+    <p class="subhead">
+      O método direto ao ponto para você <strong>editar com confiança</strong>, valorizar cada clique e impressionar qualquer pessoa que ver suas imagens.
+    </p>
+    <br><br>
+    <a href="#oferta" class="btn-cta large">Quero transformar minhas fotos</a>
+    <span class="cta-nudge">Oferta de lançamento · Acesso imediato</span>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- PROMISE -->
+<div class="promise">
+  <div class="container">
+    <span class="section-label">O que você vai conquistar</span>
+    <div class="promise-grid">
+      <div class="promise-item">
+        <span class="promise-icon">⚡</span>
+        <strong>Resultado em minutos</strong>
+        <p>Aprenda a editar de forma rápida e eficiente, sem perder horas na frente do computador.</p>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon">✦</span>
+        <strong>Visual profissional</strong>
+        <p>Fotos com aquela aparência que todo mundo para para olhar — sem precisar de câmera cara.</p>
+      </div>
+      <div class="promise-item">
+        <span class="promise-icon">◎</span>
+        <strong>Método simples e direto</strong>
+        <p>Sem enrolação. Cada aula te leva direto ao ponto que realmente transforma uma foto.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PAIN -->
+<section class="pain">
+  <div class="container">
+    <span class="section-label">Você se identifica?</span>
+    <h2 class="section-title">As fotos saem boas,<br>mas poderiam ser <em style="font-style:italic;color:var(--gold)">muito melhores</em></h2>
+    <div class="pain-list">
+      <div class="pain-item">
+        <span class="pain-num">01</span>
+        <div class="pain-text">
+          <strong>Você tira ótimas fotos, mas na edição trava</strong>
+          <p>Não sabe por onde começar, testa filtros aleatórios e o resultado nunca parece o que você imaginava.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">02</span>
+        <div class="pain-text">
+          <strong>Já tentou tutoriais e ficou mais confuso ainda</strong>
+          <p>Muita informação técnica, muitos menus, e no fim você não sabe o que realmente importa.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">03</span>
+        <div class="pain-text">
+          <strong>Fica admirando as fotos dos outros sem saber o segredo</strong>
+          <p>Aquela leveza, aquele tom, aquele acabamento que parece profissional — você quer isso nas suas fotos.</p>
+        </div>
+      </div>
+      <div class="pain-item">
+        <span class="pain-num">04</span>
+        <div class="pain-text">
+          <strong>Sente que demora demais para editar cada foto</strong>
+          <p>O processo é tão lento que você desiste no meio, ou publica sem estar satisfeito com o resultado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- MODULES -->
+<section class="modules">
+  <div class="container">
+    <span class="section-label">O que você vai aprender</span>
+    <h2 class="section-title">Tudo o que você precisa.<br>Nada do que é supérfluo.</h2>
+    <p class="section-sub">Cada módulo foi construído para gerar resultado imediato. Você aplica e já vê a diferença na mesma aula.</p>
+    <div class="modules-grid">
+      <div class="module-card">
+        <span class="tag">Módulo 01</span>
+        <h3>O olho antes da ferramenta</h3>
+        <p>Aprenda a enxergar o que torna uma foto impactante antes mesmo de abrir qualquer editor.</p>
+      </div>
+      <div class="module-card">
+        <span class="tag">Módulo 02</span>
+        <h3>Luz e cor em minutos</h3>
+        <p>Os ajustes essenciais de exposição, contraste e temperatura que transformam qualquer foto em segundos.</p>
+      </div>
+      <div class="module-card">
+        <span class="tag">Módulo 03</span>
+        <h3>Seu estilo visual</h3>
+        <p>Como criar uma identidade visual consistente para que suas fotos sejam reconhecidas de imediato.</p>
+      </div>
+      <div class="module-card">
+        <span class="tag">Módulo 04</span>
+        <h3>Edição no celular e no desktop</h3>
+        <p>Fluxo de trabalho prático para editar rápido, seja no Lightroom, Snapseed ou qualquer ferramenta.</p>
+      </div>
+      <div class="module-card">
+        <span class="tag">Módulo 05</span>
+        <h3>Correção de erros comuns</h3>
+        <p>Os problemas mais frequentes que estragam fotos boas — e como resolver cada um deles.</p>
+      </div>
+      <div class="module-card">
+        <span class="tag">Módulo 06</span>
+        <h3>Do arquivo à publicação</h3>
+        <p>Exportação, formatos e como fazer suas fotos manterem a qualidade em qualquer plataforma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMATION TABLE -->
+<section class="transform">
+  <div class="container">
+    <span class="section-label">A transformação</span>
+    <h2 class="section-title">Antes e depois do<br>Foto em Minutos</h2>
+    <div class="transform-table">
+      <div class="transform-col">
+        <div class="transform-header before">Sem o curso</div>
+        <div class="transform-cell before"><span class="icon">✕</span>Edição lenta, sem critério e sem resultado</div>
+        <div class="transform-cell before"><span class="icon">✕</span>Fotos sem identidade e sem consistência</div>
+        <div class="transform-cell before"><span class="icon">✕</span>Dependência de filtros prontos que nunca ficam certos</div>
+        <div class="transform-cell before"><span class="icon">✕</span>Frustração de publicar fotos que não representam você</div>
+        <div class="transform-cell before"><span class="icon">✕</span>Horas investidas sem evolução visível</div>
+      </div>
+      <div class="transform-col">
+        <div class="transform-header after">Com o Foto em Minutos</div>
+        <div class="transform-cell after"><span class="icon" style="color:var(--gold)">✦</span>Edita em minutos com confiança e precisão</div>
+        <div class="transform-cell after"><span class="icon" style="color:var(--gold)">✦</span>Estilo visual próprio, reconhecível e consistente</div>
+        <div class="transform-cell after"><span class="icon" style="color:var(--gold)">✦</span>Entende o que fazer em cada foto, sem depender de filtros</div>
+        <div class="transform-cell after"><span class="icon" style="color:var(--gold)">✦</span>Orgulho de publicar — fotos que impressionam de verdade</div>
+        <div class="transform-cell after"><span class="icon" style="color:var(--gold)">✦</span>Evolução visível desde a primeira aula</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="offer-section" id="oferta">
+  <div class="container">
+    <div class="offer-box">
+      <div class="offer-top">
+        <div class="offer-badge">🔒 Oferta exclusiva de lançamento</div>
+        <h2>Tudo que você precisa<br>para transformar suas fotos</h2>
+        <p>Acesso completo ao curso Foto em Minutos com todos os módulos, exercícios práticos e suporte. Resultado garantido desde a primeira aula.</p>
+
+        <ul class="checklist">
+          <li>6 módulos com aulas práticas e diretas ao ponto</li>
+          <li>Acesso imediato e vitalício ao conteúdo</li>
+          <li>Funciona no celular, tablet e computador</li>
+          <li>Exercícios práticos após cada módulo</li>
+          <li>Atualizações inclusas sem custo adicional</li>
+          <li>Garantia de 7 dias — satisfação total ou devolução</li>
+        </ul>
+
+        <div class="offer-price-row">
+          <span class="price-from">De R$ 97</span>
+          <span class="price-badge">LANÇAMENTO</span>
+        </div>
+      </div>
+
+      <div class="offer-cta">
+        <a href="https://pay.kiwify.com.br/7t2Ebpd" class="btn-cta large">Garantir meu acesso agora</a>
+        <p class="guarantee">
+          <strong>Garantia de 7 dias.</strong> Se não estiver satisfeito, devolvemos 100% do seu investimento. Sem perguntas.
+        </p>
+        <p class="cta-nudge" style="margin-top:16px;">🔒 Pagamento seguro · Acesso imediato após confirmação</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="container">
+    <span class="section-label">Dúvidas frequentes</span>
+    <h2 class="section-title">Perguntas e respostas</h2>
+    <div class="faq-list">
+      <details>
+        <summary>Preciso ter alguma experiência com fotografia?</summary>
+        <p>Não. O curso foi feito para funcionar para qualquer nível. Se você tira fotos pelo celular ou tem uma câmera e quer melhorar seus resultados, o método é para você.</p>
+      </details>
+      <details>
+        <summary>Quais ferramentas de edição são usadas?</summary>
+        <p>O curso aborda os principais editores gratuitos e pagos — incluindo Lightroom Mobile, que é gratuito e um dos mais poderosos. Você não precisa comprar nenhum software para começar.</p>
+      </details>
+      <details>
+        <summary>Por quanto tempo terei acesso ao curso?</summary>
+        <p>O acesso é vitalício. Você assiste no seu ritmo, quantas vezes quiser, para sempre — inclusive recebendo atualizações futuras sem custo adicional.</p>
+      </details>
+      <details>
+        <summary>E se eu não gostar?</summary>
+        <p>Você tem 7 dias de garantia incondicional. Se por qualquer motivo não ficar satisfeito, é só solicitar a devolução e você recebe 100% do valor de volta, sem burocracia.</p>
+      </details>
+      <details>
+        <summary>O curso funciona para quem fotografa apenas pelo celular?</summary>
+        <p>Sim, completamente. Grande parte do conteúdo é aplicável direto no celular, e as técnicas ensinadas elevam o resultado independente do equipamento.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <div class="container">
+    <h2>Suas fotos merecem<br>ficar <em style="font-style:italic;color:var(--gold)">ainda melhores</em></h2>
+    <p>Preço de lançamento por tempo limitado. Garanta agora.</p>
+    <a href="#oferta" class="btn-cta large">Quero transformar minhas fotos</a>
+    <span class="cta-nudge" style="margin-top:14px;display:block;">Garantia de 7 dias · Acesso imediato</span>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>
+    © 2025 Foto em Minutos. Todos os direitos reservados.<br>
+    <a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a>
+  </p>
+</footer>
+
+<!-- STICKY CTA (mobile only) -->
+<div class="sticky-cta">
+  <a href="#oferta" class="btn-cta">Garantir meu acesso</a>
+</div>
+
+</body>
+</html>
