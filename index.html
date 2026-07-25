@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Foto em Minutos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:     #080808;
+      --dark:      #101010;
+      --card:      #141414;
+      --border:    #1e1e1e;
+      --border-mid:#2a2a2a;
+      --white:     #ffffff;
+      --off-white: #e8e8e8;
+      --muted:     #6b6b6b;
+      --gold:      #c9a84c;
+      --gold-light:#e2c47a;
+      --gold-dim:  rgba(201,168,76,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--off-white);
+      font-family: 'Inter', sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 28px;
+      background: rgba(8,8,8,0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-logo span { color: var(--gold); }
+
+    .nav-cta {
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #080808;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 10px 20px;
+      border-radius: 6px;
+      transition: opacity .2s;
+    }
+
+    .nav-cta:hover { opacity: .85; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 28px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 50% at 50% 40%, rgba(201,168,76,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(40px, 10vw, 80px);
+      font-weight: 800;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .hero-sub {
+      font-size: clamp(15px, 3vw, 19px);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 20px auto 48px;
+      line-height: 1.65;
+    }
+
+    .hero-sub strong { color: var(--off-white); font-weight: 500; }
+
+    .hero-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      align-items: center;
+      width: 100%;
+      max-width: 340px;
+    }
+
+    .btn-primary {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      color: #080808;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 18px 32px;
+      border-radius: 8px;
+      text-align: center;
+      transition: opacity .2s, transform .15s;
+    }
+
+    .btn-primary:hover { opacity: .88; transform: translateY(-2px); }
+
+    .btn-secondary {
+      display: block;
+      width: 100%;
+      background: transparent;
+      color: var(--off-white);
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 17px 32px;
+      border-radius: 8px;
+      border: 1px solid var(--border-mid);
+      text-align: center;
+      transition: border-color .2s, color .2s;
+    }
+
+    .btn-secondary:hover { border-color: var(--gold); color: var(--gold); }
+
+    .hero-scroll {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+
+    .hero-scroll::after {
+      content: '';
+      width: 1px;
+      height: 32px;
+      background: linear-gradient(to bottom, var(--border-mid), transparent);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateX(-50%) translateY(0); }
+      50%       { transform: translateX(-50%) translateY(6px); }
+    }
+
+    /* ── SECTION BASE ── */
+    section { padding: 80px 0; }
+
+    .container { width: 100%; max-width: 800px; margin: 0 auto; padding: 0 24px; }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 6vw, 42px);
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.15;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      font-size: 15px;
+      font-weight: 300;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 520px;
+    }
+
+    hr.divider { border: none; border-top: 1px solid var(--border); }
+
+    /* ── GALLERY ── */
+    .gallery-section { padding: 80px 0 0; }
+
+    .gallery-section .container { padding-bottom: 0; }
+
+    .gallery-scroll {
+      margin-top: 40px;
+      display: flex;
+      gap: 12px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 24px 32px;
+      scrollbar-width: none;
+    }
+
+    .gallery-scroll::-webkit-scrollbar { display: none; }
+
+    .gallery-item {
+      flex: 0 0 auto;
+      scroll-snap-align: start;
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--card);
+      border: 1px solid var(--border);
+    }
+
+    /* Portrait (3:4) */
+    .gallery-item.portrait {
+      width: 220px;
+      height: 293px;
+    }
+
+    /* Landscape (4:3) */
+    .gallery-item.landscape {
+      width: 340px;
+      height: 255px;
+    }
+
+    /* Square */
+    .gallery-item.square {
+      width: 260px;
+      height: 260px;
+    }
+
+    .gallery-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .4s ease;
+    }
+
+    .gallery-item:hover img { transform: scale(1.03); }
+
+    .gallery-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      color: var(--border-mid);
+    }
+
+    .gallery-placeholder .ph-icon { font-size: 28px; }
+    .gallery-placeholder span { font-size: 11px; letter-spacing: 0.05em; }
+
+    .gallery-hint {
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+      padding: 0 24px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .gallery-hint::before,
+    .gallery-hint::after {
+      content: '';
+      flex: 1;
+      max-width: 60px;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ── BEFORE/AFTER ── */
+    .ba-section {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ba-wrapper {
+      margin-top: 40px;
+      position: relative;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      aspect-ratio: 9/16;
+      background: var(--card);
+      cursor: col-resize;
+      user-select: none;
+    }
+
+    .ba-before, .ba-after {
+      position: absolute;
+      inset: 0;
+    }
+
+    .ba-before img, .ba-after img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-fit: contain;
+      display: block;
+    }
+
+    .ba-after { clip-path: inset(0 50% 0 0); }
+
+    .ba-handle {
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 2px;
+      background: var(--gold);
+      transform: translateX(-50%);
+      cursor: col-resize;
+    }
+
+    .ba-handle::before {
+      content: '◀ ▶';
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--gold);
+      color: #080808;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 8px 10px;
+      border-radius: 100px;
+      white-space: nowrap;
+      letter-spacing: 0.05em;
+    }
+
+    .ba-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--border-mid);
+      text-align: center;
+      padding: 24px;
+    }
+
+    .ba-placeholder .ph-icon { font-size: 36px; }
+    .ba-placeholder p { font-size: 13px; line-height: 1.6; max-width: 220px; }
+
+    .ba-labels {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 14px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .ba-labels .label-before { color: var(--muted); }
+    .ba-labels .label-after  { color: var(--gold); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      margin-top: 48px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .about-card {
+      background: var(--card);
+      padding: 32px 28px;
+    }
+
+    .about-card .icon { font-size: 24px; margin-bottom: 14px; display: block; }
+
+    .about-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--white);
+      margin-bottom: 8px;
+    }
+
+    .about-card p { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+    /* ── CTA SECTION ── */
+    .cta-section {
+      background: var(--dark);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      padding: 80px 0;
+    }
+
+    .cta-section .section-title { margin-bottom: 12px; }
+
+    .cta-section .section-sub {
+      margin: 0 auto 48px;
+      text-align: center;
+    }
+
+    .cta-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-top: 0;
+    }
+
+    .cta-card {
+      background: var(--card);
+      border: 1px solid var(--border-mid);
+      border-radius: 12px;
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      text-align: center;
+    }
+
+    .cta-card.featured {
+      border-color: rgba(201,168,76,0.4);
+      background: #111009;
+    }
+
+    .cta-card .card-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .cta-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      line-height: 1.2;
+    }
+
+    .cta-card p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .cta-card .btn-primary,
+    .cta-card .btn-secondary { margin-top: 8px; }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 48px 24px 40px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--white);
+      margin-bottom: 28px;
+      display: block;
+    }
+
+    .footer-logo span { color: var(--gold); }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 28px;
+      margin-bottom: 28px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: color .2s;
+    }
+
+    .footer-links a:hover { color: var(--gold); }
+
+    .footer-links .link-icon { font-size: 16px; }
+
+    .footer-copy {
+      font-size: 11px;
+      color: #333;
+      line-height: 1.8;
+    }
+
+    .footer-copy a { color: #444; text-decoration: underline; text-underline-offset: 3px; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 16px 20px; }
+      .hero { padding: 100px 20px 72px; }
+      .hero-btns { max-width: 100%; }
+      .about-grid { grid-template-columns: 1fr; }
+      .cta-cards { grid-template-columns: 1fr; }
+      .gallery-item.landscape { width: 280px; height: 210px; }
+      .gallery-item.portrait  { width: 180px; height: 240px; }
+      .gallery-item.square    { width: 220px; height: 220px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-scroll { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <span class="nav-logo">Foto em <span>Minutos</span></span>
+  <a href="quero-transformar-minhas-fotos/" class="nav-cta">Comprar o curso</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <p class="hero-eyebrow">Curso online de fotografia e edição</p>
+  <h1>Foto em<br><em>Minutos</em></h1>
+  <p class="hero-sub">
+    Deixe suas fotos <strong>ainda mais incríveis</strong> em minutos — do celular à edição, com um método simples e resultado imediato.
+  </p>
+  <div class="hero-btns">
+    <a href="quero-transformar-minhas-fotos/" class="btn-primary">Quero transformar minhas fotos</a>
+    <a href="lista-vip/" class="btn-secondary">Entrar para a lista VIP</a>
+  </div>
+  <div class="hero-scroll">role</div>
+</section>
+
+<hr class="divider" />
+
+<!-- GALLERY -->
+<section class="gallery-section">
+  <div class="container">
+    <span class="section-label">Fotografado com celular</span>
+    <h2 class="section-title">O que é possível<br>com a câmera do bolso</h2>
+    <p class="section-sub">Todas as fotos abaixo foram tiradas com celular. O equipamento importa menos do que você imagina.</p>
+  </div>
+
+  <div class="gallery-scroll">
+    <!-- 
+      Para adicionar suas fotos, substitua os blocos abaixo.
+      Exemplo: <div class="gallery-item portrait"><img src="imagens/foto1.jpg" alt="descrição" /></div>
+      Tipos disponíveis: portrait | landscape | square
+    -->
+    <div class="gallery-item landscape">
+  <img src="imagens/LRM_EXPORT_39681151454760_20190420_203024284.jpeg" alt="descrição" />
+    </div>
+    <div class="gallery-item landscape">
+  <img src="imagens/20260628_153419.jpg" alt="descrição" />
+    </div>
+    <div class="gallery-item portrait">
+  <img src="imagens/20221015_205331.jpg" alt="descrição" />
+    </div>
+    <div class="gallery-item portrait">
+  <img src="imagens/20260304_203424.jpg" alt="descrição" />
+    </div>
+    <div class="gallery-item landscape">
+  <img src="imagens/20251004_180854.jpg" alt="descrição" />
+    </div>
+    <div class="gallery-item portrait">
+  <img src="imagens/LRM_EXPORT_284878214875217_20190409_165101212.jpeg" alt="descrição" />
+    </div>
+    <div class="gallery-item portrait">
+  <img src="imagens/20251204_160217.jpg" alt="descrição" />
+    </div>
+  </div>
+  <p class="gallery-hint">deslize para ver mais</p>
+</section>
+
+<hr class="divider" />
+
+<!-- BEFORE / AFTER -->
+<section class="ba-section">
+  <div class="container">
+    <span class="section-label">Antes e depois</span>
+    <h2 class="section-title">A diferença que<br>a edição faz</h2>
+    <p class="section-sub">Arraste o divisor e veja a transformação de uma foto simples com as técnicas do curso.</p>
+
+    <div class="ba-wrapper" id="baWrapper">
+      <!-- 
+        Quando tiver as fotos, substitua o bloco .ba-placeholder por:
+        <div class="ba-before"><img src="imagens/antes.jpg" alt="Antes da edição" /></div>
+        <div class="ba-after"><img src="imagens/depois.jpg" alt="Depois da edição" /></div>
+        <div class="ba-handle"></div>
+      -->
+      <div class="ba-before"><img src="imagens/Antes_1.jpg" alt="Antes da edição" /></div>
+        <div class="ba-after"><img src="imagens/Depois_1.jpg" alt="Depois da edição" /></div>
+        <div class="ba-handle"></div>
+    </div>
+
+    <div class="ba-labels">
+      <span class="label-before"><Antes_1 class="jpg"></Antes_1></span>
+      <span class="label-after"><Depois_1 class="jpg"></Depois_1></span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ABOUT -->
+<section>
+  <div class="container">
+    <span class="section-label">Sobre o curso</span>
+    <h2 class="section-title">Tudo o que você precisa.<br>Sem enrolação.</h2>
+    <p class="section-sub">Um método objetivo para quem quer resultado desde a primeira aula — sem precisar de câmera cara ou conhecimento técnico.</p>
+
+    <div class="about-grid">
+      <div class="about-card">
+        <span class="icon">⚡</span>
+        <h3>Resultado imediato</h3>
+        <p>Cada aula tem aplicação prática direta. Você termina e já vê a diferença nas suas fotos.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">📱</span>
+        <h3>Funciona no celular</h3>
+        <p>Aprenda a extrair o máximo da câmera que você já tem no bolso, sem investir em equipamento.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">◎</span>
+        <h3>Método direto</h3>
+        <p>Sem teoria desnecessária. Focado no que realmente transforma uma foto comum em algo especial.</p>
+      </div>
+      <div class="about-card">
+        <span class="icon">✦</span>
+        <h3>Acesso vitalício</h3>
+        <p>Assista no seu ritmo, quantas vezes quiser, com todas as atualizações futuras inclusas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA SECTION -->
+<section class="cta-section">
+  <div class="container">
+    <span class="section-label">Escolha como começar</span>
+    <h2 class="section-title">Pronto para transformar<br>suas fotos?</h2>
+    <p class="section-sub">Garanta seu acesso agora ou entre para a lista VIP e receba novidades em primeira mão.</p>
+
+    <div class="cta-cards">
+      <div class="cta-card">
+        <span class="card-label">Lista VIP</span>
+        <h3>Receba novidades em primeira mão</h3>
+        <p>Cadastre-se gratuitamente e seja o primeiro a saber sobre lançamentos, promoções e conteúdos exclusivos.</p>
+        <a href="lista-vip/" class="btn-secondary">Entrar para a lista VIP</a>
+      </div>
+      <div class="cta-card featured">
+        <span class="card-label">Curso completo</span>
+        <h3>Transforme suas fotos agora</h3>
+        <p>Acesso imediato a todos os módulos, exercícios práticos e garantia de 7 dias.</p>
+        <a href="quero-transformar-minhas-fotos/" class="btn-primary">Quero transformar minhas fotos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">Foto em <span>Minutos</span></span>
+  <div class="footer-links">
+    <a href="https://instagram.com/fotoemminutos" target="_blank" rel="noopener">
+      <span class="link-icon">📸</span> @fotoemminutos
+    </a>
+    <a href="mailto:fotoemminutos@gmail.com">
+      <span class="link-icon">✉️</span> fotoemminutos@gmail.com
+    </a>
+  </div>
+  <p class="footer-copy">
+    © 2025 Foto em Minutos. Todos os direitos reservados.<br>
+    <a href="#">Política de Privacidade</a> · <a href="#">Termos de Uso</a>
+  </p>
+</footer>
+
+<script>
+  // ── Before/After Slider ──
+  const wrapper = document.getElementById('baWrapper');
+  const after   = wrapper?.querySelector('.ba-after');
+  const handle  = wrapper?.querySelector('.ba-handle');
+
+  if (after && handle) {
+    let dragging = false;
+
+    function setPosition(x) {
+      const rect = wrapper.getBoundingClientRect();
+      let pct = ((x - rect.left) / rect.width) * 100;
+      pct = Math.min(95, Math.max(5, pct));
+      after.style.clipPath = `inset(0 ${100 - pct}% 0 0)`;
+      handle.style.left = pct + '%';
+    }
+
+    handle.addEventListener('mousedown',  () => dragging = true);
+    handle.addEventListener('touchstart', () => dragging = true, { passive: true });
+    window.addEventListener('mouseup',    () => dragging = false);
+    window.addEventListener('touchend',   () => dragging = false);
+
+    window.addEventListener('mousemove', e => { if (dragging) setPosition(e.clientX); });
+    window.addEventListener('touchmove', e => {
+      if (dragging) setPosition(e.touches[0].clientX);
+    }, { passive: true });
+
+    wrapper.addEventListener('click', e => setPosition(e.clientX));
+  }
+</script>
+
+</body>
+</html>
